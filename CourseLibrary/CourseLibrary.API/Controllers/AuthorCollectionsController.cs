@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CourseLibrary.API.Helper;
+using CourseLibrary.API.Helpers;
 using CourseLibrary.API.Models;
 using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,57 +14,59 @@ namespace CourseLibrary.API.Controllers
     [Route("api/authorcollections")]
     public class AuthorCollectionsController : ControllerBase
     {
-        private readonly ICourseLibraryRepository courseLibraryRepository;
-        private readonly IMapper mapper;
+        private readonly ICourseLibraryRepository _courseLibraryRepository;
+        private readonly IMapper _mapper;
+
         public AuthorCollectionsController(ICourseLibraryRepository courseLibraryRepository,
             IMapper mapper)
         {
-            this.courseLibraryRepository = courseLibraryRepository ??
+            _courseLibraryRepository = courseLibraryRepository ??
                 throw new ArgumentNullException(nameof(courseLibraryRepository));
-            this.mapper = mapper ?? 
+            _mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet("({ids})", Name = "GetAuthorCollection")]
+        [HttpGet("({ids})", Name ="GetAuthorCollection")]
         public IActionResult GetAuthorCollection(
-            [FromRoute] [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        [FromRoute]
+        [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
-            if(ids == null)
+            if (ids == null)
             {
                 return BadRequest();
             }
 
-            var authorEntities = this.courseLibraryRepository.GetAuthors(ids);
+            var authorEntities = _courseLibraryRepository.GetAuthors(ids);
 
-            if(ids.Count() != authorEntities.Count())
+            if (ids.Count() != authorEntities.Count())
             {
                 return NotFound();
             }
 
-            var authorsToReturn = this.mapper.Map<IEnumerable<AuthorDto>>(authorEntities);
+            var authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authorEntities);
 
             return Ok(authorsToReturn);
         }
 
+
         [HttpPost]
         public ActionResult<IEnumerable<AuthorDto>> CreateAuthorCollection(
-            IEnumerable<AuthorForCreationDto> authorColletion)
+            IEnumerable<AuthorForCreationDto> authorCollection)
         {
-            var authorEntities = this.mapper.Map<IEnumerable<Entities.Author>>(authorColletion);
-            foreach ( var author in authorEntities)
+            var authorEntities = _mapper.Map<IEnumerable<Entities.Author>>(authorCollection);
+            foreach (var author in authorEntities)
             {
-                this.courseLibraryRepository.AddAuthor(author);
+                _courseLibraryRepository.AddAuthor(author);
             }
 
-            this.courseLibraryRepository.Save();
+            _courseLibraryRepository.Save();
 
-            var authorCollectionToReturn = this.mapper.Map<IEnumerable<AuthorDto>>(authorEntities);
+            var authorCollectionToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authorEntities);
             var idsAsString = string.Join(",", authorCollectionToReturn.Select(a => a.Id));
-
             return CreatedAtRoute("GetAuthorCollection",
-                new { ids = idsAsString },
-                authorCollectionToReturn);
+             new { ids = idsAsString },
+             authorCollectionToReturn);
         }
-
     }
 }
+ 

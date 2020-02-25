@@ -4,7 +4,7 @@ using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,16 +25,36 @@ namespace CourseLibrary.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            // API will return error code if unsupported media type is requested
-            // First one in the list is öncelikli
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-            }).AddXmlDataContractSerializerFormatters();
-             
+
+            })
+             .AddXmlDataContractSerializerFormatters()
+            .ConfigureApiBehaviorOptions(setupAction =>
+            {
+                setupAction.InvalidModelStateResponseFactory = context =>
+                {
+                    var problemDetails = new ValidationProblemDetails(context.ModelState)
+                    {
+                        Type = "https://courselibrary.com/modelvalidationproblem",
+                        Title = "One or more model validation errors occurred.",
+                        Status = StatusCodes.Status422UnprocessableEntity,
+                        Detail = "See the errors property for details.",
+                        Instance = context.HttpContext.Request.Path
+                    };
+
+                    problemDetails.Extensions.Add("traceId", context.HttpContext.TraceIdentifier);
+
+                    return new UnprocessableEntityObjectResult(problemDetails)
+                    {
+                        ContentTypes = { "application/problem+json" }
+                    };
+                };
+            });
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<ICourseLibraryRepository, CourseLibraryRepository>();
 
             services.AddDbContext<CourseLibraryContext>(options =>
@@ -61,6 +81,7 @@ namespace CourseLibrary.API
                         await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
                     });
                 });
+
             }
 
             app.UseRouting();

@@ -65,45 +65,6 @@ namespace CourseLibrary.API.Services
                         .OrderBy(c => c.Title).ToList();
         }
 
-        // Query support is done via mainCategory and searchQuery
-        // Examples of URL queries given below
-        // http://localhost:51044/api/authors?mainCategory=Rum
-        // http://localhost:51044/api/authors?searchQuery=a
-        // http://localhost:51044/api/authors?mainCategory=Rum&searchQuery=a
-        /*Old Query method
-         public IEnumerable<Author> GetAuthors(string mainCategory, string searchQuery)*/
-        public IEnumerable<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters)
-        {
-            if(authorsResourceParameters == null)
-            {
-                throw new ArgumentNullException(nameof(authorsResourceParameters));
-            }
-
-            if (string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory) 
-                && string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
-            {
-                return GetAuthors();
-            }
-
-            var collection = _context.Authors as IQueryable<Author>;
-
-            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory))
-            {
-                var mainCategory = authorsResourceParameters.MainCategory.Trim();
-                collection = collection.Where(a => a.MainCategory == mainCategory);
-            }
-
-            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
-            {
-                var searchQuery = authorsResourceParameters.SearchQuery.Trim();
-                collection = collection.Where(a => a.MainCategory.Contains(searchQuery)
-                                            || a.FirstName.Contains(searchQuery)
-                                            || a.LastName.Contains(searchQuery));
-            }
-
-            return collection.ToList();
-        }
-
         public void UpdateCourse(Course course)
         {
             // no code in this implementation
@@ -161,7 +122,40 @@ namespace CourseLibrary.API.Services
         {
             return _context.Authors.ToList<Author>();
         }
-         
+
+        public IEnumerable<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters)
+        {
+            if (authorsResourceParameters == null)
+            {
+                throw new ArgumentNullException(nameof(authorsResourceParameters));
+            }
+
+            if (string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory)
+                 && string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
+            {
+                return GetAuthors();
+            }
+
+            var collection = _context.Authors as IQueryable<Author>;
+
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory))
+            {
+                var mainCategory = authorsResourceParameters.MainCategory.Trim();
+                collection = collection.Where(a => a.MainCategory == mainCategory);
+            }
+
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
+            {
+
+                var searchQuery = authorsResourceParameters.SearchQuery.Trim();
+                collection = collection.Where(a => a.MainCategory.Contains(searchQuery)
+                    || a.FirstName.Contains(searchQuery)
+                    || a.LastName.Contains(searchQuery));
+            }
+
+            return collection.ToList();
+        }
+
         public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)
         {
             if (authorIds == null)
