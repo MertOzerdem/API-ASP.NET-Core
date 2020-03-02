@@ -84,6 +84,8 @@ namespace CourseLibrary.API
 
             }
 
+            //app.AddEfDiagrams<CourseLibraryContext>();
+
             app.UseRouting();
 
             app.UseAuthorization();

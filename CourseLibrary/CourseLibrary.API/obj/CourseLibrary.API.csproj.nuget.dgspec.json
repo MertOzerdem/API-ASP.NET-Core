@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\m_e_r\\OneDrive\\Masaüstü\\asp-dot-net-core-3-restful-api-building\\07\\demos\\end\\CourseLibrary\\CourseLibrary.API\\CourseLibrary.API.csproj": {}
+    "C:\\Users\\m_e_r\\OneDrive\\Masaüstü\\asp2\\CourseLibrary\\CourseLibrary.API\\CourseLibrary.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\m_e_r\\OneDrive\\Masaüstü\\asp-dot-net-core-3-restful-api-building\\07\\demos\\end\\CourseLibrary\\CourseLibrary.API\\CourseLibrary.API.csproj": {
+    "C:\\Users\\m_e_r\\OneDrive\\Masaüstü\\asp2\\CourseLibrary\\CourseLibrary.API\\CourseLibrary.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\m_e_r\\OneDrive\\Masaüstü\\asp-dot-net-core-3-restful-api-building\\07\\demos\\end\\CourseLibrary\\CourseLibrary.API\\CourseLibrary.API.csproj",
+        "projectUniqueName": "C:\\Users\\m_e_r\\OneDrive\\Masaüstü\\asp2\\CourseLibrary\\CourseLibrary.API\\CourseLibrary.API.csproj",
         "projectName": "CourseLibrary.API",
-        "projectPath": "C:\\Users\\m_e_r\\OneDrive\\Masaüstü\\asp-dot-net-core-3-restful-api-building\\07\\demos\\end\\CourseLibrary\\CourseLibrary.API\\CourseLibrary.API.csproj",
+        "projectPath": "C:\\Users\\m_e_r\\OneDrive\\Masaüstü\\asp2\\CourseLibrary\\CourseLibrary.API\\CourseLibrary.API.csproj",
         "packagesPath": "C:\\Users\\m_e_r\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\m_e_r\\OneDrive\\Masaüstü\\asp-dot-net-core-3-restful-api-building\\07\\demos\\end\\CourseLibrary\\CourseLibrary.API\\obj\\",
+        "outputPath": "C:\\Users\\m_e_r\\OneDrive\\Masaüstü\\asp2\\CourseLibrary\\CourseLibrary.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -44,6 +44,10 @@
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
               "version": "[6.1.1, )"
+            },
+            "EntityFrameworkCore.Diagrams": {
+              "target": "Package",
+              "version": "[0.4.2, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
